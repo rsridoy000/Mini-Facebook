@@ -1,0 +1,79 @@
+{% extends 'blog/base.html' %}
+{% block title %}Notifications — Mini-Facebook{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="section-header mb-0">
+                    <i class="fas fa-bell me-2" style="color:#667eea;"></i>
+                    Notifications
+                    <span class="badge ms-2" style="background:linear-gradient(135deg,#667eea,#764ba2); font-size:0.75rem;">
+                        {{ notifications.count }}
+                    </span>
+                </h5>
+            </div>
+
+            {% if notifications %}
+                {% for notif in notifications %}
+                <div class="notif-item {% if not notif.is_read %}unread{% endif %}">
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- Sender Avatar -->
+                        <div class="d-flex align-items-center justify-content-center flex-shrink-0"
+                             style="width: 44px; height: 44px; border-radius: 50%;
+                                    background: linear-gradient(135deg,
+                                    {% if notif.notif_type == 'like' %}#ff6b6b, #ee5a24
+                                    {% elif notif.notif_type == 'comment' %}#667eea, #764ba2
+                                    {% else %}#11998e, #38ef7d{% endif %}); color:white; font-weight:700; font-size:0.9rem;">
+                            {{ notif.sender.username|slice:":2"|upper }}
+                        </div>
+
+                        <!-- Notification Text -->
+                        <div class="flex-grow-1">
+                            <span class="fw-semibold" style="color:#2d3436;">
+                                <a href="/profile/{{ notif.sender.username }}/" class="text-decoration-none fw-bold" style="color:#667eea;">{{ notif.sender.username }}</a>
+                            </span>
+                            {% if notif.notif_type == 'like' %}
+                                <span class="text-muted"> liked your post</span>
+                                <i class="fas fa-heart text-danger ms-1"></i>
+                            {% elif notif.notif_type == 'comment' %}
+                                <span class="text-muted"> commented on your post</span>
+                                <i class="fas fa-comment text-primary ms-1"></i>
+                            {% elif notif.notif_type == 'follow' %}
+                                <span class="text-muted"> started following you</span>
+                                <i class="fas fa-user-plus ms-1" style="color:#11998e;"></i>
+                            {% endif %}
+                            <br>
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>{{ notif.created_at|date:"M d, Y — H:i" }}
+                            </small>
+                        </div>
+
+                        <!-- Action Link -->
+                        {% if notif.post %}
+                        <a href="/post/{{ notif.post.pk }}/" class="btn btn-outline-primary btn-sm px-3 rounded-pill flex-shrink-0">
+                            <i class="fas fa-eye me-1"></i>View
+                        </a>
+                        {% elif notif.notif_type == 'follow' %}
+                        <a href="/profile/{{ notif.sender.username }}/" class="btn btn-outline-primary btn-sm px-3 rounded-pill flex-shrink-0">
+                            <i class="fas fa-user me-1"></i>Profile
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5 bg-white rounded-3 shadow-sm">
+                    <i class="fas fa-bell-slash fa-4x mb-3" style="color:#d1d8e0;"></i>
+                    <h5 class="text-muted">No notifications yet!</h5>
+                    <p class="text-muted small">When someone likes, comments, or follows you — it'll show up here.</p>
+                    <a href="/" class="btn btn-primary px-4 mt-2">
+                        <i class="fas fa-home me-2"></i>Explore Posts
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

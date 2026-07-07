@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}MyBlog{% endblock %}</title>
+    <title>{% block title %}Mini-Facebook{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #667eea;
@@ -13,7 +14,7 @@
         }
         body {
             background-color: #f4f6fb;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
         }
         .navbar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -140,6 +141,65 @@
             border-radius: 10px;
             border: none;
         }
+        /* Notification bell */
+        .notif-bell {
+            position: relative;
+            display: inline-block;
+        }
+        .notif-badge {
+            position: absolute;
+            top: -4px;
+            right: -6px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.6rem;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-badge 1.5s infinite;
+        }
+        @keyframes pulse-badge {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        /* Post image */
+        .post-card-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px 12px 0 0;
+        }
+        /* Pagination */
+        .page-link {
+            color: #667eea;
+            border-radius: 8px;
+            margin: 0 2px;
+        }
+        .page-item.active .page-link {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: #667eea;
+        }
+        /* Notification items */
+        .notif-item {
+            border-left: 3px solid #667eea;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: #fff;
+            transition: all 0.2s;
+        }
+        .notif-item.unread {
+            background: linear-gradient(135deg, rgba(102,126,234,0.06), rgba(118,75,162,0.04));
+            border-left-color: #764ba2;
+        }
+        .notif-item:hover {
+            box-shadow: 0 4px 15px rgba(102,126,234,0.15);
+        }
     </style>
 </head>
 <body>
@@ -147,7 +207,7 @@
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="/">
-            <i class="fas fa-feather-alt me-2"></i>MyBlog
+            <i class="fas fa-globe-asia me-2"></i>Mini-Facebook
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <i class="fas fa-bars" style="color:white;"></i>
@@ -159,13 +219,33 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
+                    <a class="nav-link px-3 py-2" href="/feed/">
+                        <i class="fas fa-rss me-1"></i>My Feed
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3 py-2" href="/profile/{{ user.username }}/">
+                        <i class="fas fa-user-circle me-1"></i>My Profile
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link px-3 py-2" href="/post/create/">
                         <i class="fas fa-plus-circle me-1"></i>New Post
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link px-3 py-2 position-relative" href="/notifications/" id="notif-bell-link">
+                        <span class="notif-bell">
+                            <i class="fas fa-bell"></i>
+                            {% if unread_notif_count > 0 %}
+                            <span class="notif-badge" id="notif-badge">{{ unread_notif_count }}</span>
+                            {% endif %}
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link px-3 py-2" href="/admin/">
-                        <i class="fas fa-cog me-1"></i>Admin
+                        <i class="fas fa-cog me-1"></i>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -205,10 +285,8 @@
 
 <footer>
     <p class="mb-0">
-        &copy; 2026 <strong style="color:white;">MyBlog</strong> &mdash;
-        Developed By  <i class="fas fa-heart text-danger"></i> using
-        <a href="https://djangoproject.com1">R S RIDOY</a> ; 
-        
+        &copy; 2026 <strong style="color:white;">Mini-Facebook</strong> &mdash;
+        Built with <i class="fas fa-heart text-danger"></i> by <strong style="color:#667eea;">R S RIDOY</strong>
     </p>
 </footer>
 

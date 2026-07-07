@@ -1,5 +1,5 @@
 {% extends 'blog/base.html' %}
-{% block title %}{{ post.title }} — MyBlog{% endblock %}
+{% block title %}{{ post.title }} — Mini-Facebook{% endblock %}
 
 {% block content %}
 <div class="container mt-4 mb-5">
@@ -8,12 +8,18 @@
 
             <!-- Post Card -->
             <div class="card mb-4">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}"
+                     style="width:100%; max-height:380px; object-fit:cover; border-radius:14px 14px 0 0;">
+                {% endif %}
                 <div class="card-body p-4 p-md-5">
                     <h2 class="fw-bold mb-3">{{ post.title }}</h2>
                     <div class="d-flex align-items-center gap-3 flex-wrap mb-4">
-                        <span class="badge-author">
-                            <i class="fas fa-user me-1"></i>{{ post.author.username }}
-                        </span>
+                        <a href="/profile/{{ post.author.username }}/" class="text-decoration-none">
+                            <span class="badge-author">
+                                <i class="fas fa-user me-1"></i>{{ post.author.username }}
+                            </span>
+                        </a>
                         <small class="text-muted">
                             <i class="fas fa-calendar-alt me-1"></i>{{ post.created_date|date:"F d, Y" }}
                         </small>
@@ -44,7 +50,7 @@
                             <i class="fas fa-heart me-1"></i>{{ total_likes }} Likes
                         </span>
                         <small class="text-muted">
-                            <a href="/login/" class="text-decoration-none" style="color:#667eea;">Login</a> to like this post
+                            <a href="/login/" class="text-decoration-none" style="color:#667eea;">Login</a> to like
                         </small>
                         {% endif %}
                         <span class="text-muted">
@@ -76,11 +82,25 @@
 
                     {% for comment in comments %}
                     <div class="comment-box">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <strong style="color:#667eea; font-size:0.9rem;">
-                                <i class="fas fa-user-circle me-1"></i>{{ comment.author.username }}
-                            </strong>
-                            <small class="text-muted">{{ comment.created_date|date:"M d, Y" }}</small>
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <a href="/profile/{{ comment.author.username }}/" class="text-decoration-none">
+                                    <strong style="color:#667eea; font-size:0.9rem;">
+                                        <i class="fas fa-user-circle me-1"></i>{{ comment.author.username }}
+                                    </strong>
+                                </a>
+                                <small class="text-muted ms-2">{{ comment.created_date|date:"M d, Y" }}</small>
+                            </div>
+                            {% if user == comment.author %}
+                            <form method="post" action="/comment/{{ comment.pk }}/delete/"
+                                  onsubmit="return confirm('Delete this comment?');" style="margin:0;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0"
+                                        title="Delete comment" style="font-size:0.75rem;">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                            {% endif %}
                         </div>
                         <p class="mb-0 mt-2" style="font-size:0.95rem; color:#555;">{{ comment.content }}</p>
                     </div>

@@ -1,49 +1,19 @@
 {% extends 'blog/base.html' %}
-{% block title %}Home — Mini-Facebook{% endblock %}
+{% block title %}My Feed — Mini-Facebook{% endblock %}
 
 {% block content %}
-<div class="hero-section">
-    <div class="container">
-        <h1 class="fw-bold mb-3">
-            <i class="fas fa-globe-asia me-2"></i>Mini-Facebook
-        </h1>
-        <p class="mb-4">Connect, share stories, and follow the people you care about</p>
-        {% if user.is_authenticated %}
-        <div class="d-flex gap-3 justify-content-center">
-            <a href="/post/create/" class="btn btn-light btn-lg px-4 shadow-sm">
-                <i class="fas fa-pen me-2" style="color:#667eea;"></i>Write a Post
-            </a>
-            <a href="/feed/" class="btn btn-outline-light btn-lg px-4">
-                <i class="fas fa-rss me-2"></i>My Feed
-            </a>
-        </div>
-        {% else %}
-        <div class="d-flex gap-3 justify-content-center">
-            <a href="/register/" class="btn btn-light btn-lg px-4 shadow-sm">
-                <i class="fas fa-user-plus me-2" style="color:#667eea;"></i>Join Now
-            </a>
-            <a href="/login/" class="btn btn-outline-light btn-lg px-4">
-                <i class="fas fa-sign-in-alt me-2"></i>Login
-            </a>
-        </div>
-        {% endif %}
-    </div>
-</div>
-
-<div class="container">
+<div class="container mt-5 mb-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h5 class="section-header mb-0">
-            <i class="fas fa-newspaper me-2" style="color:#667eea;"></i>
-            Latest Posts
+            <i class="fas fa-rss me-2" style="color:#667eea;"></i>
+            Your Feed
             <span class="badge ms-2" style="background:linear-gradient(135deg,#667eea,#764ba2); font-size:0.75rem;">
                 {{ posts.paginator.count }}
             </span>
         </h5>
-        {% if user.is_authenticated %}
         <a href="/post/create/" class="btn btn-primary btn-sm px-3">
             <i class="fas fa-plus me-1"></i>New Post
         </a>
-        {% endif %}
     </div>
 
     {% if posts %}
@@ -91,7 +61,7 @@
     <!-- Pagination -->
     {% if posts.has_other_pages %}
     <div class="d-flex justify-content-center mt-5">
-        <nav aria-label="Page navigation">
+        <nav>
             <ul class="pagination gap-1">
                 {% if posts.has_previous %}
                 <li class="page-item">
@@ -124,21 +94,15 @@
     {% endif %}
 
     {% else %}
-    <div class="text-center py-5">
+    <div class="text-center py-5 bg-white rounded-3 shadow-sm">
         <div class="mb-3">
-            <i class="fas fa-inbox fa-4x" style="color:#d1d8e0;"></i>
+            <i class="fas fa-rss fa-4x" style="color:#d1d8e0;"></i>
         </div>
-        <h5 class="text-muted">No posts yet!</h5>
-        <p class="text-muted">Be the first to write something amazing.</p>
-        {% if user.is_authenticated %}
-        <a href="/post/create/" class="btn btn-primary px-4 mt-2">
-            <i class="fas fa-pen me-2"></i>Create First Post
+        <h5 class="text-muted">Your feed is empty!</h5>
+        <p class="text-muted">You're not following anyone yet.</p>
+        <a href="/" class="btn btn-primary px-4 mt-2">
+            <i class="fas fa-search me-2"></i>Explore Posts & Find People
         </a>
-        {% else %}
-        <a href="/register/" class="btn btn-primary px-4 mt-2">
-            <i class="fas fa-user-plus me-2"></i>Register to Post
-        </a>
-        {% endif %}
     </div>
     {% endif %}
 </div>
